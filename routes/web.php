@@ -25,10 +25,10 @@ Route::get('/', function () {
     // return view('welcome');
     return redirect()->route('beranda');
 });
-// Frontend 
-Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda'); 
+// Frontend
+Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
 
-// backend 
+// backend
 Route::get('backend/beranda', [BerandaController::class, 'berandaBackend'])->name('backend.beranda');
 Route::get('backend/login', [LoginController::class, 'loginBackend'])->name('backend.login');
 Route::post('backend/login', [LoginController::class, 'authenticateBackend'])->name('backend.login.authenticate');
@@ -50,12 +50,21 @@ Route::post('backend/laporan/cetakuser', [UserController::class, 'cetakUser'])->
 Route::get('backend/laporan/formproduk', [ProdukController::class, 'formProduk'])->name('backend.laporan.formproduk')->middleware('auth');
 Route::post('backend/laporan/cetakproduk', [ProdukController::class, 'cetakProduk'])->name('backend.laporan.cetakproduk')->middleware('auth');
 
+Route::middleware(['web'])->group(function () {
+// Frontend
+Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
 Route::get('/produk/detail/{id}', [ProdukController::class, 'detail'])->name('produk.detail');
-Route::get('/produk/kategori/{id}', [ProdukController::class, 'produkKategori'])->name('produk.kategori'); 
+Route::get('/produk/kategori/{id}', [ProdukController::class, 'produkKategori'])->name('produk.kategori');
 Route::get('/produk/all', [ProdukController::class, 'produkAll'])->name('produk.all');
+});
 
 //API Google
 Route::get('/auth/redirect', [CustomerController::class, 'redirect'])->name('auth.redirect');
 Route::get('/auth/google/callback', [CustomerController::class, 'callback'])->name('auth.callback');
 // Logout
-Route::post('/logout', [CustomerController::class, 'logout'])->name('logout');
+Route::post('/logout', [CustomerController::class, 'logout'])->name('customer.logout');
+// Route untuk custumer
+Route::resource('backend/custumer', CustomerController::class, ['as' => 'backend'])->middleware('auth');
+// Route untuk menampilkan halaman akun customer
+Route::get('/customer/akun/{id}', [CustomerController::class, 'akun'])->name('customer.akun')->middleware('is.customer');
+Route::put('/customer/akun/{id}/update', [CustomerController::class, 'updateAkun'])->name('customer.akun.update')->middleware('is.customer');

@@ -42,19 +42,36 @@ class ImageHelper
             imagedestroy($image);
             $image = $newImage;
         }
+
         // Simpan gambar dengan kualitas asli
         switch ($extension) {
             case 'jpeg':
             case 'jpg':
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
                 imagejpeg($image, $destinationPath . '/' . $fileName);
+                imagedestroy($image);
                 break;
+
             case 'png':
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
                 imagepng($image, $destinationPath . '/' . $fileName);
+                imagedestroy($image);
                 break;
+
             case 'gif':
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
                 imagegif($image, $destinationPath . '/' . $fileName);
+                imagedestroy($image);
                 break;
         }
+
+
         imagedestroy($image);
         return $fileName;
     }
